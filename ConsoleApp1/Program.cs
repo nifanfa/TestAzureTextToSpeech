@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using WMPLib;
 
 namespace ConsoleApp1
@@ -16,6 +17,7 @@ namespace ConsoleApp1
         {
             IPEndPoint endp = new IPEndPoint(IPAddress.Any, 54188);
             UdpClient udp = new UdpClient(endp.Port);
+            MessageBox.Show("OK");
             for(; ; )
             {
                 byte[] buffer = udp.Receive(ref endp);
@@ -26,6 +28,8 @@ namespace ConsoleApp1
 
         private static void TextToSpeech(string text)
         {
+            GC.Collect();
+
             try
             {
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.text-to-speech.cn/getSpeek.php");
@@ -43,9 +47,6 @@ namespace ConsoleApp1
                 string url = s;
                 url = url.Substring(0, url.IndexOf(".mp3") + 4);
                 url = url.Substring(url.LastIndexOf("https://"));
-
-                //Console.WriteLine($"raw:{s}");
-                Console.WriteLine($"parsed url:{url}");
 
                 WebClient wc = new WebClient();
                 wc.DownloadFile(url, "temp.mp3");
